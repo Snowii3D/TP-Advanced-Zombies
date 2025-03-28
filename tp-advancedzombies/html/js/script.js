@@ -1,4 +1,3 @@
-
 var playersCount = 0;
 
 function closeAdvancedZombiesUI() {
@@ -8,7 +7,7 @@ function closeAdvancedZombiesUI() {
 
   $('#userslist').html('');
 
-	$.post('http://tp-advancedzombies/closeUI', JSON.stringify({}));
+	$.post('http://snowii_advanced-zombies/closeUI', JSON.stringify({}));
 }
 
 function toggleAdvancedZombiesUI(bool) {
@@ -58,120 +57,64 @@ loadScript("js/locales/locales-" + Config.Locale + ".js").then( data  => {
 }) .catch( err => { console.error(err); });
 
 
-$(function() {
-
-  toggleAdvancedZombiesUI(false);
-
-	window.addEventListener('message', function(event) {
-		
-    var item = event.data;
-
-    if (item.action === 'toggle') {
-			toggleAdvancedZombiesUI(item.toggle);
-
-    }else if (event.data.action == "addPersonalStatistics") {
-			var prod_player = event.data.stats;
-
-      document.getElementById("header_character_personal_zombiekills_title").innerHTML = prod_player.zombie_kills;
-      document.getElementById("header_character_personal_deaths_title").innerHTML = prod_player.deaths;
-
-    }else if (event.data.action == "addPlayerStatistics") {
-			var prod_player = event.data.player_det;
-
-      if (prod_player.zombie_kills > 0){
-        playersCount = playersCount + 1;
-      }
-
-      if (event.data.clientIdentifier == prod_player.identifier) {
-
-        if (prod_player.zombie_kills <= 0){
-          document.getElementById("header_character_personal_rank_title").innerHTML = Locales.RankTitle + "#N/A";
-
-        }else {
-          document.getElementById("header_character_personal_rank_title").innerHTML = Locales.RankTitle + "#" + playersCount;
+$(document).ready(function() {
+    // Handle UI toggle
+    function toggleUI(display) {
+        if (display) {
+            $("#advancedzombies").fadeIn(300);
+        } else {
+            $("#advancedzombies").fadeOut(300);
         }
+    }
 
-      }
+    // Handle close button
+    $("#close_personal_statistics").click(function() {
+        $.post('http://snowii_advanced-zombies/closeUI', JSON.stringify({}));
+    });
 
-      if (playersCount <= 15 && prod_player.zombie_kills > 0){
-        $("#userslist").append(
-          `<div id="userslist_main">`+
-          `<div>`+
-  
-          `</div>`+
-          `<span 
-          identifier = ` + prod_player.identifier + 
-          ` name = ` + prod_player.name + 
-          ` zombie_kills = ` + prod_player.zombie_kills + 
-          
-          + ` </span>`+
-  
-          `<span class = "userlist_displays" id="userlist_rank_display">` + "#" + playersCount + ` </span>`+
-  
-          `<span class = "userlist_displays" id="userlist_username_display">` + prod_player.name + ` </span>`+
-          
-          `<span class = "userlist_displays" id="userlist_zombiekills_display">` + prod_player.zombie_kills + ` </span>`+
-             
-          `<span class = "userlist_displays" id="userlist_deaths_display">` + prod_player.deaths + ` </span>`+
+    // Listen for NUI messages
+    window.addEventListener('message', function(event) {
+        var item = event.data;
 
-          `</div>`+
-  
-          `</div>`+
-        `</div>`
-        );
-      }
-
-    } else if (event.data.action == "closeUI") {
-      closeAdvancedZombiesUI();
-  
-		} else if (event.data.action == "playSound") {
-
-            if (event.data.sound != null) {
-
-                const audioPlayer = new Audio("./sounds/" + event.data.sound);
-
-                if (audioPlayer != null && audioPlayer !== undefined) {
-                  audioPlayer.volume = event.data.soundVolume;
-                  audioPlayer.play();
-                }
-
+        if (item.action === "toggle") {
+            toggleUI(item.toggle);
+        }
+        
+        else if (item.action === "addPersonalStatistics") {
+            // Update personal stats
+            $("#personal-kills").text(item.stats.zombie_kills);
+            $("#personal-deaths").text(item.stats.deaths);
+            
+            // Calculate rank (will be updated when all players are loaded)
+            window.currentPlayerIdentifier = item.stats.identifier;
+        }
+        
+        else if (item.action === "addPlayerStatistics") {
+            var player = item.player_det;
+            var isCurrentPlayer = (player.identifier === window.currentPlayerIdentifier);
+            
+            // Create player row
+            var playerRow = $('<div class="player-row' + (isCurrentPlayer ? ' current-player' : '') + '">');
+            
+            playerRow.append($('<div class="player-name">').text(player.name));
+            playerRow.append($('<div class="player-kills">').text(player.zombie_kills));
+            playerRow.append($('<div class="player-deaths">').text(player.deaths));
+            
+            // Add to list
+            $("#userslist").append(playerRow);
+            
+            // If this is the current player, update their rank
+            if (isCurrentPlayer) {
+                var rank = $("#userslist .player-row").length;
+                $("#personal-rank").text("Rank #" + rank);
             }
-
+        }
+        
+        else if (item.action === "playSound") {
+            // Handle sound if needed
+            var sound = new Audio("sounds/" + item.sound);
+            sound.volume = item.soundVolume || 1.0;
+            sound.play();
         }
     });
-
-    $("#center-side").on("click", "#close_personal_statistics", function() {
-
-      closeAdvancedZombiesUI();
-      
-    });
-
-    $("body").on("keyup", function (key) {
-      if (key.which == 27){
-        closeAdvancedZombiesUI();
-      }
-    });
-  
-    $('audio').addEventListener('error', function failed(e) {
-        // audio playback failed - show a message saying why
-        // to get the source of the audio element use $(this).src
-        switch (e.target.error.code) {
-          case e.target.error.MEDIA_ERR_ABORTED:
-            alert('You aborted the video playback.');
-            break;
-          case e.target.error.MEDIA_ERR_NETWORK:
-            alert('A network error caused the audio download to fail.');
-            break;
-          case e.target.error.MEDIA_ERR_DECODE:
-            alert('The audio playback was aborted due to a corruption problem or because the video used features your browser did not support.');
-            break;
-          case e.target.error.MEDIA_ERR_SRC_NOT_SUPPORTED:
-            alert('The video audio not be loaded, either because the server or network failed or because the format is not supported.');
-            break;
-          default:
-            alert('An unknown error occurred.');
-            break;
-        }
-    }, true);
-
 });

@@ -1,4 +1,4 @@
--- tp-advancedzombies:onPlayerZombieKill client event in order to send in server side.
+-- snowii_advanced-zombies:onPlayerZombieKill client event in order to send in server side.
 
 zombiesList            = {}
 entitys                = {}
@@ -11,7 +11,7 @@ local isPlayerCrouching  = false
 
 local playerCurrentZone = nil
 
-TriggerServerEvent("tp-advancedzombies:onZombieSpawningStart")
+TriggerServerEvent("snowii_advanced-zombies:onZombieSpawningStart")
 
 AddEventHandler('esx:onPlayerDeath', function(data)
     isDead = true
@@ -28,8 +28,8 @@ AddEventHandler('disc-death:onPlayerRevive', function(data)
 end)
 
 
-RegisterNetEvent("tp-advancedzombies:setCrouchingStatus")
-AddEventHandler("tp-advancedzombies:setCrouchingStatus", function(cb)
+RegisterNetEvent("snowii_advanced-zombies:setCrouchingStatus")
+AddEventHandler("snowii_advanced-zombies:setCrouchingStatus", function(cb)
 	isPlayerCrouching = cb
 end)
 
@@ -168,7 +168,7 @@ if Config.Zombies.PlayCustomSpeakingSounds then
                         end
                     end
     
-                    --TriggerServerEvent('tp-advancedzombies:SyncSpeakingSoundsOnServer', GetEntityCoords(v.entity))
+                    --TriggerServerEvent('snowii_advanced-zombies:SyncSpeakingSoundsOnServer', GetEntityCoords(v.entity))
                 end
     
             end
@@ -304,7 +304,7 @@ if Config.Zombies.DropLoot and Config.Framework ~= "Standalone" then
                                     end
                                     TaskPlayAnim(PlayerPedId(), "random@domestic", "pickup_low", 8.0, -8, 2000, 2, 0, 0, 0, 0)
 
-                                    TriggerServerEvent("tp-advancedzombies:onZombiesLootReward", v.entityName)
+                                    TriggerServerEvent("snowii_advanced-zombies:onZombiesLootReward", v.entityName)
 
                                     Wait(100)
                                     table.remove(zombiesList, k)
@@ -323,8 +323,8 @@ if Config.Zombies.DropLoot and Config.Framework ~= "Standalone" then
         end
     end)
 
-    RegisterNetEvent("tp-advancedzombies:getZombieEntityOnClient")
-    AddEventHandler("tp-advancedzombies:getZombieEntityOnClient", function(data)
+    RegisterNetEvent("snowii_advanced-zombies:getZombieEntityOnClient")
+    AddEventHandler("snowii_advanced-zombies:getZombieEntityOnClient", function(data)
 
         Wait(60000 * Config.Zombies.Loot.RemoveLootSleepTime)
     
@@ -367,7 +367,7 @@ StartCheckingZombiePedKills = function()
 
                 local deadZombieLocation = GetEntityCoords(v.entity, true)
 
-                TriggerEvent("tp-advancedzombies:onPlayerZombieKill")
+                TriggerEvent("snowii_advanced-zombies:onPlayerZombieKill")
 
                 updatePlayerStatistics("zombie_kills", 1)
 
@@ -389,7 +389,7 @@ StartCheckingZombiePedKills = function()
                             z = deadZombieLocation.z,
                         })
     
-                        TriggerServerEvent("tp-advancedzombies:getZombieEntityOnServer", {entity = v.entity, entityName = v.name, x = deadZombieLocation.x, y = deadZombieLocation.y, z = deadZombieLocation.z,} )
+                        TriggerServerEvent("snowii_advanced-zombies:getZombieEntityOnServer", {entity = v.entity, entityName = v.name, x = deadZombieLocation.x, y = deadZombieLocation.y, z = deadZombieLocation.z,} )
         
                     end
                 end
@@ -409,7 +409,7 @@ end
 
 
 
-AddEventHandler('tp-advancedzombies:hasEnteredZone', function(zone, type, blockPlayerAggressiveActions, blockZombiePedSpawning)
+AddEventHandler('snowii_advanced-zombies:hasEnteredZone', function(zone, type, blockPlayerAggressiveActions, blockZombiePedSpawning)
     playerCurrentZone = zone
 
     if blockZombiePedSpawning then
@@ -417,13 +417,13 @@ AddEventHandler('tp-advancedzombies:hasEnteredZone', function(zone, type, blockP
     end
 end)
 
-AddEventHandler('tp-advancedzombies:hasExitedZone', function(zone)
+AddEventHandler('snowii_advanced-zombies:hasExitedZone', function(zone)
     playerIsInSafezone = false
     playerCurrentZone  = nil
 end)
 
-RegisterNetEvent("tp-advancedzombies:onZombieSync")
-AddEventHandler("tp-advancedzombies:onZombieSync", function()
+RegisterNetEvent("snowii_advanced-zombies:onZombieSync")
+AddEventHandler("snowii_advanced-zombies:onZombieSync", function()
 
 	AddRelationshipGroup("zombie")
 	SetRelationshipBetweenGroups(0, GetHashKey("zombie"), GetHashKey("PLAYER"))
@@ -699,8 +699,8 @@ Citizen.CreateThread(function()
     end
 end)
 
-RegisterNetEvent('tp-advancedzombies:clearZombies')
-AddEventHandler('tp-advancedzombies:clearZombies', function()
+RegisterNetEvent('snowii_advanced-zombies:clearZombies')
+AddEventHandler('snowii_advanced-zombies:clearZombies', function()
 
     for i, v in pairs(entitys) do
 
@@ -721,5 +721,5 @@ AddEventHandler("onResourceStop", function(resourceName)
         return
     end
 
-    TriggerEvent('tp-advancedzombies:clearZombies')
+    TriggerEvent('snowii_advanced-zombies:clearZombies')
 end)

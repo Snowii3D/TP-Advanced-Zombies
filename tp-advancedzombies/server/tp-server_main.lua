@@ -1,23 +1,22 @@
-
 AddEventHandler("playerDropped", function(reason)
-    TriggerClientEvent('tp-advancedzombies:clearZombies', source)
+    TriggerClientEvent('snowii_advanced-zombies:clearZombies', source)
 end)
 
-RegisterServerEvent("tp-advancedzombies:getZombieEntityOnServer")
-AddEventHandler("tp-advancedzombies:getZombieEntityOnServer", function(data)
-	TriggerClientEvent("tp-advancedzombies:getZombieEntityOnClient", source, data)
+RegisterServerEvent("snowii_advanced-zombies:getZombieEntityOnServer")
+AddEventHandler("snowii_advanced-zombies:getZombieEntityOnServer", function(data)
+	TriggerClientEvent("snowii_advanced-zombies:getZombieEntityOnClient", source, data)
 end)
 
 
-RegisterServerEvent("tp-advancedzombies:onZombieSpawningStart")
-AddEventHandler("tp-advancedzombies:onZombieSpawningStart", function()
-	TriggerClientEvent("tp-advancedzombies:onZombieSync", source)
+RegisterServerEvent("snowii_advanced-zombies:onZombieSpawningStart")
+AddEventHandler("snowii_advanced-zombies:onZombieSpawningStart", function()
+	TriggerClientEvent("snowii_advanced-zombies:onZombieSync", source)
 end)
 
-RegisterServerEvent('tp-advancedzombies:SyncSpeakingSoundsOnServer')
-AddEventHandler('tp-advancedzombies:SyncSpeakingSoundsOnServer', function(entiyCoords)
+RegisterServerEvent('snowii_advanced-zombies:SyncSpeakingSoundsOnServer')
+AddEventHandler('snowii_advanced-zombies:SyncSpeakingSoundsOnServer', function(entiyCoords)
 
-    TriggerClientEvent('tp-advancedzombies:SyncSpeakingSoundsOnClient', source, entiyCoords)
+    TriggerClientEvent('snowii_advanced-zombies:SyncSpeakingSoundsOnClient', source, entiyCoords)
 
 end)
 

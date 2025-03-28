@@ -41,13 +41,13 @@ AddEventHandler('snowii_advanced-zombies:onPlayerStatisticsLoad', function()
 
     local identifier = getIdentifier(_source)
 
-    -- Checking if identifier exists in the tp_user_statistics table, if not, we insert the new ID to the table.
-    MySQL.Async.fetchAll('SELECT * from tp_user_statistics WHERE identifier = @identifier',{
+    -- Checking if identifier exists in the snowii_user_statistics table, if not, we insert the new ID to the table.
+    MySQL.Async.fetchAll('SELECT * from snowii_user_statistics WHERE identifier = @identifier',{
         ["@identifier"] = identifier
     },function (info)
         if info[1] == nil then
 
-            MySQL.Async.execute('INSERT INTO tp_user_statistics (identifier, name, deaths, zombie_kills) VALUES (@identifier, @name, @deaths, @zombie_kills)',
+            MySQL.Async.execute('INSERT INTO snowii_user_statistics (identifier, name, deaths, zombie_kills) VALUES (@identifier, @name, @deaths, @zombie_kills)',
             {
                 ['@identifier'] = identifier,
                 ['@name'] = GetPlayerName(_source),
@@ -57,7 +57,7 @@ AddEventHandler('snowii_advanced-zombies:onPlayerStatisticsLoad', function()
 
             loadedPlayerData = true
 
-            print("Inserting new player with the ID: " .. identifier .. " (" .. GetPlayerName(_source) .. ") to tp_user_statistics table.")
+            print("Inserting new player with the ID: " .. identifier .. " (" .. GetPlayerName(_source) .. ") to snowii_user_statistics table.")
         else
             loadedPlayerData = true
         end
@@ -67,12 +67,12 @@ AddEventHandler('snowii_advanced-zombies:onPlayerStatisticsLoad', function()
         Citizen.Wait(100)
     end
 
-    -- If tp_user_statistics table has been loaded / checked with the player identifier, we start loading all the player statistics.
+    -- If snowii_user_statistics table has been loaded / checked with the player identifier, we start loading all the player statistics.
     if loadedPlayerData then
     
         Wait(5000)
     
-        MySQL.Async.fetchAll('SELECT * FROM tp_user_statistics WHERE identifier = @identifier', {
+        MySQL.Async.fetchAll('SELECT * FROM snowii_user_statistics WHERE identifier = @identifier', {
             ['@identifier'] = identifier
         }, function(result)
     
@@ -134,7 +134,7 @@ function saveUserStatistics(_source)
             local zombieKills = v.zombie_kills
             local playerDeaths = v.deaths
 
-            MySQL.Sync.execute('UPDATE tp_user_statistics SET deaths = @deaths, zombie_kills = @zombie_kills WHERE identifier = @identifier', {
+            MySQL.Sync.execute('UPDATE snowii_user_statistics SET deaths = @deaths, zombie_kills = @zombie_kills WHERE identifier = @identifier', {
                 ["identifier"] = _identifier,
                 ["deaths"] = playerDeaths,
                 ["zombie_kills"] = zombieKills
@@ -149,7 +149,7 @@ if Config.Framework == "ESX" then
 
     ESX.RegisterServerCallback('snowii_advanced-zombies:getAllPlayerStatistics', function(source, cb)
 
-        local results = MySQL.Sync.fetchAll('SELECT * FROM tp_user_statistics ORDER BY zombie_kills DESC')
+        local results = MySQL.Sync.fetchAll('SELECT * FROM snowii_user_statistics ORDER BY zombie_kills DESC')
 
         for k,v in pairs(results) do
 
@@ -173,7 +173,7 @@ end
 if Config.Framework == "QBCore" then
 
     QBCore.Functions.CreateCallback('snowii_advanced-zombies:getAllPlayerStatistics', function(source,cb)
-        local results = MySQL.Sync.fetchAll('SELECT * FROM tp_user_statistics ORDER BY zombie_kills DESC')
+        local results = MySQL.Sync.fetchAll('SELECT * FROM snowii_user_statistics ORDER BY zombie_kills DESC')
 
         for k,v in pairs(results) do
 
