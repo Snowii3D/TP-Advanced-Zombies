@@ -1,0 +1,110 @@
+Changelog for Snowii Advanced Zombies v1.7.1
+
+[New Features]
+1. Sound System Integration
+- Added support for xsound and sounity
+- Implemented 3D sound effects for zombies
+- Added sound-based zombie attraction system
+- Configurable volume and distance settings
+- Sound events for gunshots, vehicle noise, and player actions
+
+2. Vehicle System
+- Added parked vehicle density control
+- Implemented vehicle damage from zombies
+- Added player damage while in vehicles
+- Configurable damage settings and intervals
+- Vehicle cleanup on resource stop
+
+3. Special Zombie Types
+- Added stronger zombies with custom health
+- Implemented runner zombies with increased speed
+- Added on-fire zombies with damage over time
+- Added gas zombies with area damage effects
+- Configurable spawn chances for special zombies
+
+4. Redzone System
+- Added configurable spawn zones
+- Implemented zone-specific zombie limits
+- Added custom spawn distances
+- Zone-specific zombie models
+- Dynamic zombie spawning based on player proximity
+
+5. Firezone System
+- Added areas where zombies are set on fire
+- Implemented configurable damage per second
+- Added area-based effects
+- Automatic fire damage application
+
+6. Excluded Peds System
+- Added comprehensive list of excluded peds
+- Configurable ped spawning system
+- Used for shops and other NPC interactions
+- Prevents zombie conversion of important NPCs
+
+7. Headshot System
+- Added configurable headshot damage
+- Implemented optional insta-kill feature
+- Added damage multiplier settings
+- Improved combat mechanics
+
+8. Safe Zone System
+- Added designated safe areas
+- Implemented optional zombie spawning in safe zones
+- Added automatic zombie removal in safe zones
+- Configurable safe zone properties
+
+[Technical Improvements]
+1. Performance Optimizations
+- Improved entity management
+- Added proper cleanup on resource stop
+- Optimized distance checks
+- Implemented efficient thread management
+
+2. Code Structure
+- Separated features into dedicated files
+- Improved code organization
+- Added proper exports for external use
+- Enhanced configuration system
+
+3. Resource Management
+- Added proper model loading/unloading
+- Implemented efficient entity tracking
+- Added cleanup handlers
+- Improved memory management
+
+[Configuration Updates]
+1. Added new configuration sections:
+- SoundSystem
+- VehicleSystem
+- ZombieTypes
+- RedZones
+- FireZones
+- ExcludedPeds
+- Headshot
+- SafeZones
+
+2. Enhanced existing configurations:
+- Updated zombie models
+- Improved zone settings
+- Added new loot options
+- Enhanced spawn settings
+
+[File Structure Changes]
+1. Added new client files:
+- sound_system.lua
+- vehicle_system.lua
+- zombie_types.lua
+
+2. Updated manifest:
+- Added new client scripts
+- Updated resource information
+- Improved file organization
+
+[Known Issues]
+- None reported
+
+[Future Plans]
+- Additional zombie types
+- More special effects
+- Enhanced vehicle interactions
+- Improved performance optimizations 
